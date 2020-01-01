@@ -24,11 +24,3 @@ class Logger(dir: String) {
         log("$info\n$errors")
     }
 }
-
-class ThreadExceptionHandler(val logger: Logger) : Thread.UncaughtExceptionHandler {
-    override fun uncaughtException(t: Thread?, e: Throwable?) {
-        if (e != null)
-            logger.log(e)
-        exitProcess(10)
-    }
-}
