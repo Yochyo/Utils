@@ -36,9 +36,8 @@ object DownloadUtils {
     suspend fun getJson(urlToRead: String): JSONArray? {
         var array: JSONArray? = null
         try {
-            array = JSONArray(getUrlSource(urlToRead).joinToString("\n"))
+            array = JSONArray(String(getUrlInputStream(urlToRead)!!.readBytes()))
         } catch (e: Exception) {
-            e.printStackTrace()
         }
         return array
     }
