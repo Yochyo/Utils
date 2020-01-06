@@ -6,21 +6,21 @@ import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
-import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 object DownloadUtils {
-    suspend fun getUrlLines(urlToRead: String): StringBuilder {
+    suspend fun getUrlSource(urlToRead: String): LinkedList<String> {
         return withContext(Dispatchers.IO) {
-            val builder = StringBuilder()
+            val list = LinkedList<String>()
             try {
                 val stream = getUrlInputStream(urlToRead)
                 if (stream != null) {
                     BufferedReader(InputStreamReader(stream, "UTF-8")).use { bufferedReader ->
                         var inputLine: String? = bufferedReader.readLine()
                         while (inputLine != null) {
-                            builder.append(inputLine)
+                            list + inputLine
                             inputLine = bufferedReader.readLine()
                         }
                         stream.close()
@@ -29,14 +29,14 @@ object DownloadUtils {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            builder
+            list
         }
     }
 
     suspend fun getJson(urlToRead: String): JSONArray? {
         var array: JSONArray? = null
         try {
-            array = JSONArray(getUrlLines(urlToRead).toString())
+            array = JSONArray(getUrlSource(urlToRead).joinToString("\n"))
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -56,4 +56,9 @@ object DownloadUtils {
             }
         }
     }
+}
+
+fun main() {
+    val s = "https:test.google.de/salami.jpg"
+    println(s.substringAfterLast("."))
 }
