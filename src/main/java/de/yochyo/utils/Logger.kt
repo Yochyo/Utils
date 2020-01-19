@@ -3,7 +3,6 @@ package de.yochyo.utils
 import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
-import kotlin.system.exitProcess
 
 class Logger(dir: String) {
     private val directory = File("$dir/logs/")
@@ -12,15 +11,15 @@ class Logger(dir: String) {
         directory.mkdirs()
     }
 
-    fun log(message: String) {
-        val logFile = File(directory, "logcat ${System.currentTimeMillis()}.txt")
+    fun log(message: String, filePrefix: String = "logcat") {
+        val logFile = File(directory, "$filePrefix ${System.currentTimeMillis()}.txt")
         logFile.createNewFile()
         logFile.writeText(message)
     }
 
-    fun log(e: Throwable, info: String = "") {
+    fun log(e: Throwable, info: String = "", filePrefix: String = "logcat") {
         val errors = StringWriter()
         e.printStackTrace(PrintWriter(errors))
-        log("$info\n$errors")
+        log("$info\n$errors", filePrefix)
     }
 }
