@@ -2,6 +2,7 @@ package de.yochyo.utils
 
 import de.yochyo.json.JSONArray
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStream
@@ -11,7 +12,7 @@ import java.net.URL
 import java.util.*
 
 object DownloadUtils {
-    suspend fun getUrlSource(urlToRead: String): LinkedList<String> {
+    suspend fun getUrlSource(urlToRead: String): List<String> {
         return withContext(Dispatchers.IO) {
             val list = LinkedList<String>()
             try {
@@ -20,7 +21,7 @@ object DownloadUtils {
                     BufferedReader(InputStreamReader(stream, "UTF-8")).use { bufferedReader ->
                         var inputLine: String? = bufferedReader.readLine()
                         while (inputLine != null) {
-                            list + inputLine
+                            list += inputLine
                             inputLine = bufferedReader.readLine()
                         }
                         stream.close()
@@ -58,6 +59,7 @@ object DownloadUtils {
 }
 
 fun main() {
-    val s = "https:test.google.de/salami.jpg"
-    println(s.substringAfterLast("."))
+    val s = "https://konachan.com/post/show/299485"
+    runBlocking { println(DownloadUtils.getUrlSource(s)) }
+
 }
